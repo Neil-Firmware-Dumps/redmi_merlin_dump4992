@@ -1,0 +1,21 @@
+service mishow_start /system/bin/sh /system/bin/mishow.sh 1
+       class main
+       disabled
+       oneshot
+       seclabel u:r:mishow:s0
+
+service mishow_stop /system/bin/sh /system/bin/mishow.sh 0
+       class main
+       disabled
+       oneshot
+       seclabel u:r:mishow:s0
+
+# L19 code add for HQ-159325 by qianxiaoming at 2021.11.2
+on property:vendor.charge.mishow.ctl=true
+       start mishow_start
+
+on property:vendor.charge.mishow.ctl=false
+       start mishow_stop
+
+on property:persist.vendor.battery.mishow=true
+       setprop vendor.charge.mishow.ctl true
